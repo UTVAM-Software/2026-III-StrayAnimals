@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Stray Animals — Entregable 2-B
 
 Proyecto base Django con ORM modular, migraciones iniciales y diagramas de base de datos en formatos de imagen.
@@ -61,3 +62,6 @@ En GitHub, crear un Pull Request hacia `main` (o la rama principal definida por 
 - Las contraseñas las administra Django con su mecanismo de hash; nunca se guardan contraseñas en texto plano.
 - La fotografía de un reporte es opcional; para cargar imágenes se necesita Pillow.
 - Las solicitudes de adopción guardan el estado `Pendiente`, `Aprobada` o `Rechazada`.
+=======
+# 2026-III-StrayAnimales
+>>>>>>> d66b5d73da600342086f0350e89a7b8f062632cc
