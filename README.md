@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Stray Animals — Entregable 2-B
 
 Proyecto base Django con ORM modular, migraciones iniciales y diagramas de base de datos en formatos de imagen.
@@ -62,6 +61,37 @@ En GitHub, crear un Pull Request hacia `main` (o la rama principal definida por 
 - Las contraseñas las administra Django con su mecanismo de hash; nunca se guardan contraseñas en texto plano.
 - La fotografía de un reporte es opcional; para cargar imágenes se necesita Pillow.
 - Las solicitudes de adopción guardan el estado `Pendiente`, `Aprobada` o `Rechazada`.
-=======
-# 2026-III-StrayAnimales
->>>>>>> d66b5d73da600342086f0350e89a7b8f062632cc
+
+
+## Entregable 3 — Autenticación, CRUD y Control de Acceso
+
+Se integraron:
+
+- Login y Logout con Django Auth.
+- Redirecciones `LOGIN_REDIRECT_URL` y `LOGOUT_REDIRECT_URL`.
+- CRUD/Listado de `Rol`, `PerfilUsuario`, `Reporte`, `HogarTemporal` y `SolicitudAdopcion`.
+- CRUD/Listado desde la propia aplicación de Django Auth: `User`, `Group` y `Permission`.
+- Asignación de grupos y permisos directos a usuarios.
+- Asignación de permisos a grupos.
+- Protección explícita de cada vista con `@login_required` y `@permission_required(..., raise_exception=True)` para mitigar OWASP A01 Broken Access Control.
+- Protección para impedir que un usuario elimine su propia cuenta durante una sesión activa.
+
+### Comandos de comprobación
+
+```bash
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py makemigrations --check
+python manage.py check
+python manage.py runserver
+```
+
+Después abre `http://127.0.0.1:8000/login/`.
+
+### Prueba recomendada de Broken Access Control
+
+1. Inicia sesión como superusuario y crea un usuario normal.
+2. Intenta acceder a `/usuarios/auth/usuarios/` con ese usuario sin `auth.view_user`: debe responder 403.
+3. Asigna el permiso `Can view user` desde un grupo o directamente al usuario.
+4. Repite el acceso: ahora debe permitirse el listado.
+5. Comprueba lo mismo para agregar, cambiar y eliminar.
