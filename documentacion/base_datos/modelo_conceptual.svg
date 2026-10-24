@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<rect width="1100" height="650" fill="white"/>
+<text x="550" y="38" font-family="Arial" font-size="25" text-anchor="middle" fill="#1f2937">Stray Animals — Modelo Conceptual</text>
+<g font-family="Arial" fill="#111827" stroke="#334155" stroke-width="2">
+<rect x="70" y="120" width="220" height="105" rx="8" fill="#f8fafc"/><text x="180" y="151" font-size="20" text-anchor="middle" stroke="none" font-weight="bold">ROL</text><text x="180" y="181" font-size="15" text-anchor="middle" stroke="none">Identifica el tipo de usuario</text>
+<rect x="430" y="120" width="240" height="125" rx="8" fill="#f8fafc"/><text x="550" y="151" font-size="20" text-anchor="middle" stroke="none" font-weight="bold">USUARIO</text><text x="550" y="181" font-size="15" text-anchor="middle" stroke="none">Datos de la persona</text><text x="550" y="204" font-size="15" text-anchor="middle" stroke="none">que utiliza el sistema</text>
+<rect x="70" y="360" width="220" height="135" rx="8" fill="#f8fafc"/><text x="180" y="392" font-size="20" text-anchor="middle" stroke="none" font-weight="bold">REPORTE</text><text x="180" y="422" font-size="15" text-anchor="middle" stroke="none">Descripción, foto, ubicación,</text><text x="180" y="444" font-size="15" text-anchor="middle" stroke="none">prioridad y estatus</text>
+<rect x="430" y="360" width="240" height="135" rx="8" fill="#f8fafc"/><text x="550" y="392" font-size="20" text-anchor="middle" stroke="none" font-weight="bold">HOGAR TEMPORAL</text><text x="550" y="422" font-size="15" text-anchor="middle" stroke="none">Capacidad y disponibilidad</text>
+<rect x="790" y="360" width="240" height="135" rx="8" fill="#f8fafc"/><text x="910" y="392" font-size="20" text-anchor="middle" stroke="none" font-weight="bold">SOLICITUD DE ADOPCIÓN</text><text x="910" y="422" font-size="15" text-anchor="middle" stroke="none">Estado y fecha de solicitud</text>
+</g>
+<g stroke="#475569" stroke-width="2" fill="none"><path d="M290 170 H430"/><path d="M550 245 V300 H180 V360"/><path d="M550 245 V315 H550 V360"/><path d="M550 245 V300 H910 V360"/><path d="M290 425 H350 V535 H910 V495"/></g>
+<g font-family="Arial" font-size="15" fill="#334155"><text x="345" y="158">1:N</text><text x="300" y="290">1:N</text><text x="560" y="300">1:N</text><text x="720" y="290">1:N</text><text x="590" y="527">Reporte 1:N Solicitudes</text></g>
+<text x="550" y="610" font-family="Arial" font-size="14" text-anchor="middle" fill="#475569">Un usuario puede registrar reportes, hogares temporales y solicitudes.</text>
+</svg>
