@@ -1,97 +1,97 @@
-# Stray Animals — Entregable 2-B
+# Stray Animals — Acceso por usuario, superusuario y Solo lectura
 
-Proyecto base Django con ORM modular, migraciones iniciales y diagramas de base de datos en formatos de imagen.
+Esta versión incorpora **tres tipos de acceso** al proyecto Django + SQLite y conserva los modelos, migraciones, vistas y diseño acogedor de Stray Animals.
 
-## Aplicaciones por módulo
+## 1. Tipos de cuenta
 
-- `usuarios`: roles y perfil asociado al usuario de autenticación de Django.
-- `reportes`: reportes de perros en situación de calle.
-- `hogares_temporales`: capacidad y disponibilidad de hogares temporales.
-- `adopciones`: solicitudes de adopción relacionadas con un reporte y un usuario.
+| Tipo | Forma de alta | Acceso |
+|---|---|---|
+| Usuario (Ciudadano) | `/registro/` | Consultar reportes y hogares; registrar reportes, hogares y solicitudes propias. |
+| Superusuario | `python manage.py createsuperuser` | Administrar todos los modelos y Django Auth (`User`, `Group`, `Permission`) y acceder a `/admin/`. |
+| Solo lectura | `python manage.py crear_lector ...` | Consultar reportes, hogares y la lista de solicitudes propias; sin crear, editar ni eliminar. |
 
-Se utiliza el modelo de autenticación predeterminado de Django para no romper una instalación que ya tenga superusuario creado. Los datos propios del proyecto (nombre, correo de contacto y rol) se almacenan en `PerfilUsuario`, relacionado uno a uno con `auth.User`.
+**Importante:** todos utilizan la **misma pantalla** `/login/`, con sus credenciales individuales. No existe un selector de roles que permita asumir privilegios. Los permisos de acceso se verifican **en el servidor** mediante Django Auth, decoradores y middleware.
 
-## Requisitos
+Las cuentas de **Voluntario** y **Administrador** del Entregable anterior siguen estando definidas y no se eliminan, pero este cambio añade específicamente el acceso de Solo lectura y destaca los tres perfiles solicitados.
 
-Python 3.10 o posterior recomendado.
+## 2. Integrar sin perder tu base de datos
 
-## Instalación en Windows (PowerShell o CMD)
+1. Haz copia de seguridad de tu carpeta Django y de `db.sqlite3`.
+2. Descomprime el ZIP y copia sus archivos encima del proyecto existente, junto a `manage.py`.
+3. **No sustituyas `db.sqlite3` ni `.git`**: no vienen incluidos en el ZIP.
+4. Si tienes cambios de compañeros en `reportes/views.py` o `adopciones/views.py`, revisa los cambios antes de sobrescribirlos.
+5. Abre VS Code y activa tu entorno virtual existente.
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate
+```powershell
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-```
-
-Abrir `http://127.0.0.1:8000/admin/`.
-
-Si ya tienes un proyecto Django y un superusuario, copia las carpetas de apps y adapta `INSTALLED_APPS`, las rutas y las migraciones. No reemplaces tu `settings.py` sin respaldarlo.
-
-## Migraciones
-
-Las migraciones iniciales están incluidas en `migrations/`. Para comprobarlas o generar una migración nueva después de modificar modelos:
-
-```bash
-python manage.py makemigrations
-python manage.py migrate
-python manage.py showmigrations
-```
-
-## Diagramas
-
-Los esquemas del modelo conceptual y lógico están en `documentacion/base_datos/` como SVG. No se incluyen PDF en esa carpeta.
-
-## Git y Pull Request
-
-```bash
-git checkout -b feature/modelos-orm
-git add .
-git commit -m "Agrega modelos ORM y migraciones de Stray Animals"
-git push -u origin feature/modelos-orm
-```
-
-En GitHub, crear un Pull Request hacia `main` (o la rama principal definida por el equipo), solicitar revisión, atender comentarios y fusionarlo únicamente cuando esté aprobado. Verificar que el PR aparezca como merged.
-
-## Notas del modelo
-
-- Las claves primarias y foráneas se generan mediante Django.
-- Las contraseñas las administra Django con su mecanismo de hash; nunca se guardan contraseñas en texto plano.
-- La fotografía de un reporte es opcional; para cargar imágenes se necesita Pillow.
-- Las solicitudes de adopción guardan el estado `Pendiente`, `Aprobada` o `Rechazada`.
-
-
-## Entregable 3 — Autenticación, CRUD y Control de Acceso
-
-Se integraron:
-
-- Login y Logout con Django Auth.
-- Redirecciones `LOGIN_REDIRECT_URL` y `LOGOUT_REDIRECT_URL`.
-- CRUD/Listado de `Rol`, `PerfilUsuario`, `Reporte`, `HogarTemporal` y `SolicitudAdopcion`.
-- CRUD/Listado desde la propia aplicación de Django Auth: `User`, `Group` y `Permission`.
-- Asignación de grupos y permisos directos a usuarios.
-- Asignación de permisos a grupos.
-- Protección explícita de cada vista con `@login_required` y `@permission_required(..., raise_exception=True)` para mitigar OWASP A01 Broken Access Control.
-- Protección para impedir que un usuario elimine su propia cuenta durante una sesión activa.
-
-### Comandos de comprobación
-
-```bash
-pip install -r requirements.txt
-python manage.py migrate
+python manage.py configurar_roles
 python manage.py makemigrations --check
 python manage.py check
+python manage.py test
 python manage.py runserver
 ```
 
-Después abre `http://127.0.0.1:8000/login/`.
+`migrate` aplica la nueva migración `usuarios/migrations/0002_alter_rol_nombre_rol.py` y conserva tus datos. `configurar_roles` asegura los cuatro grupos **Ciudadano, Voluntario, Administrador, Solo lectura**. El grupo de Solo lectura se reinicia para incluir **solo** permisos `view_*` en los tres módulos.
 
-### Prueba recomendada de Broken Access Control
+## 3. Crear las cuentas
 
-1. Inicia sesión como superusuario y crea un usuario normal.
-2. Intenta acceder a `/usuarios/auth/usuarios/` con ese usuario sin `auth.view_user`: debe responder 403.
-3. Asigna el permiso `Can view user` desde un grupo o directamente al usuario.
-4. Repite el acceso: ahora debe permitirse el listado.
-5. Comprueba lo mismo para agregar, cambiar y eliminar.
+### A. Cuenta Usuario
+
+Abre `http://127.0.0.1:8000/registro/`. Se crea automáticamente la cuenta nativa `User` de Django y un `PerfilUsuario` con rol **Ciudadano**. Esa persona puede iniciar sesión en `/login/`.
+
+### B. Cuenta Superusuario
+
+Si ya tienes un superusuario, **usa el existente**. Si no tienes:
+
+```powershell
+python manage.py createsuperuser
+```
+
+La cuenta debe tener `is_superuser=True` e `is_staff=True` para acceder a `/admin/`. Nunca permitas que una persona se haga superusuario por el formulario de registro público.
+
+### C. Cuenta Solo lectura
+
+Ejecuta en PowerShell (cambia los valores por los tuyos):
+
+```powershell
+python manage.py crear_lector lector01 --nombre "Invitado de consulta" --correo "lector01@example.com"
+```
+
+El comando solicita la contraseña dos veces, **sin mostrarla en pantalla**. Nunca incluyas contraseñas en comandos o repositorios.
+
+La cuenta recibe `Group: Solo lectura`, `Rol: Solo lectura`, `is_staff=False` e `is_superuser=False` y un perfil. Después inicia sesión en `/login/` usando `lector01` y la contraseña creada.
+
+**Alternativa en el panel `/admin/`:** un superusuario puede crear un `User` normal, asignarlo únicamente al grupo `Solo lectura`, mantener desactivados *Es parte del staff* y *Es superusuario* y crear su `PerfilUsuario` con Rol `Solo lectura` y correo único.
+
+## 4. Cómo se aplica la protección OWASP A01
+
+- El grupo `Solo lectura` recibe únicamente `view_reporte`, `view_hogartemporal` y `view_solicitudadopcion`.
+- La vista de solicitudes de adopción **filtra por usuario**: el lector no ve solicitudes privadas de otras personas.
+- El middleware `usuarios.middleware.RestringirEscrituraSoloLectura` bloquea métodos inseguros (POST, PUT, PATCH, DELETE) para ese grupo; se permite el POST de cierre de sesión.
+- Las vistas de escritura además usan `@denegar_escritura_lector`, `@login_required` y `@permission_required`.
+- Las plantillas ocultan botones de escritura a cuentas de Solo lectura; **ocultar botones no sustituye el control en el servidor**.
+- Los usuarios normales no pueden administrar `User`, `Group` y `Permission`: esas vistas están reservadas al superusuario.
+- Un usuario con la combinación contradictoria `Solo lectura` + permiso de crear se mantiene de Solo lectura.
+
+## 5. Verificaciones
+
+```powershell
+python manage.py test usuarios.test_tipos_acceso usuarios.tests reportes.tests
+```
+
+También puedes probar manualmente:
+
+1. Login de `lector01` → `/reportes/` debe funcionar.
+2. Intentar `/reportes/crear/` → **403**.
+3. Intentar enviar un POST de creación → **403**.
+4. `/mi-perfil/` → muestra la información sin permitir editar.
+5. Logout → debe cerrar sesión correctamente.
+6. Login de ciudadano → puede crear reportes.
+7. Login de superusuario → puede entrar a `/admin/` y administrar usuarios.
+
+**Aviso de pruebas:** se comprobó la sintaxis de Python y la estructura del proyecto. No se pudo instalar Django dentro del entorno de preparación para ejecutar pruebas de integración; ejecútalas en tu VS Code antes de hacer Pull Request.
+
+## 6. GitHub
+
+Agrega solo los archivos de este cambio a una rama nueva y abre un Pull Request hacia `main`. **No agregues `db.sqlite3`, `.venv` o contraseñas**. Si `reportes/views.py` y `adopciones/views.py` le corresponden a tu compañero, coordinen su integración antes del merge.

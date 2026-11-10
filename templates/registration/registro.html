@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% block title %}Únete a Stray Animals{% endblock %}
+{% block content %}
+<div class="auth-shell"><div class="auth-wrap">
+  <div class="auth-illustration"><div><span class="eyebrow">💚 ¡Aquí cabemos todos!</span><h2>Tu ayuda puede ser el inicio de una nueva historia.</h2><p>Crear una cuenta es el primer paso para participar.</p></div><div class="animal" role="img" aria-label="Perrito">🐕</div></div>
+  <div class="auth-content"><span class="overline">Nueva cuenta ciudadana</span><h1>Únete a la familia</h1><p class="subtitle">Necesitamos unos pocos datos para crear tu espacio.</p>
+  <form method="post">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="notice error">{{ form.non_field_errors }}</div>{% endif %}
+    {% for field in form %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<span class="notice error" role="alert" style="display:block">{{ error }}</span>{% endfor %}</p>{% endfor %}
+    <button class="button" type="submit">Crear mi cuenta 🐾</button>
+  </form>
+  <p class="muted tiny" style="margin-top:24px">¿Ya eres parte? <a href="{% url 'login' %}">Inicia sesión</a></p>
+  <p class="legal-note">Al registrarte, recibirás el rol de Ciudadano. Los permisos de voluntario o administrador los asigna un responsable del proyecto.</p>
+  </div>
+</div></div>{% endblock %}

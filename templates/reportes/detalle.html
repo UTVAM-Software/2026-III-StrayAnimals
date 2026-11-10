@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% block title %}Reporte {{ objeto.id }} | Stray Animals{% endblock %}
+{% block content %}
+<section class="shell page-head"><span class="eyebrow">💚 Una historia que importa</span><h1>Reporte #{{ objeto.pk }}</h1><p>Conoce este caso y su estado actual. Comparte información con responsabilidad.</p></section>
+<section class="shell" style="padding-bottom:75px"><div class="content-card detail-grid">
+  <div class="photo sage">{% if objeto.fotografia %}<img src="{{ objeto.fotografia.url }}" alt="Fotografía del perro reportado">{% else %}<span style="font-size:8rem" role="img" aria-label="Perrito">🐕</span>{% endif %}</div>
+  <div class="details"><div class="status-row"><span class="tag">{{ objeto.estatus }}</span><span class="tag {{ objeto.prioridad|lower }}">Prioridad {{ objeto.prioridad }}</span></div><h2 style="margin-top:17px">Conoce su historia</h2><p>{{ objeto.descripcion|linebreaksbr }}</p><p class="card-meta">📍 {{ objeto.ubicacion }}</p><p class="tiny muted">Fecha de reporte: {{ objeto.fecha_creacion|date:'d/m/Y' }}</p>
+  <p class="overline">Seguimiento</p><div class="timeline" role="img" aria-label="Estado: {{ objeto.estatus }}"><span class="dot done"></span><span class="dot {% if objeto.estatus != 'Reportado' %}done{% endif %}"></span><span class="dot {% if objeto.estatus == 'Temporal' or objeto.estatus == 'Adoptado' %}done{% endif %}"></span><span class="dot {% if objeto.estatus == 'Adoptado' %}done{% endif %}"></span></div>
+  <div class="form-actions"><a class="button light" href="{% url 'reportes:lista' %}">← Volver a reportes</a>{% if perms.reportes.change_reporte %}<a class="button" href="{% url 'reportes:editar' objeto.pk %}">Actualizar estado</a>{% endif %}</div></div>
+</div></section>{% endblock %}

@@ -1,3 +1,16 @@
-<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login | Stray Animals</title><style>body{font-family:Arial;background:#eef2f7;display:grid;place-items:center;min-height:100vh;margin:0}.box{background:#fff;padding:32px;border-radius:10px;box-shadow:0 8px 25px #0002;width:min(420px,90%)}input{width:100%;padding:10px;box-sizing:border-box}button{padding:10px 16px;background:#2563eb;color:#fff;border:0;border-radius:5px}</style></head>
-<body><section class="box"><h1>Stray Animals</h1><h2>Iniciar sesión</h2>{% if form.errors %}<p>Usuario o contraseña incorrectos.</p>{% endif %}<form method="post">{% csrf_token %}{{ form.as_p }}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}<button type="submit">Iniciar sesión</button></form></section></body></html>
+{% extends 'base.html' %}{% block title %}Entrar a Stray Animals{% endblock %}
+{% block content %}
+<div class="auth-shell"><div class="auth-wrap">
+  <div class="auth-illustration"><div><span class="eyebrow">🐾 Qué alegría verte</span><h2>Un mismo lugar para cuidar, colaborar y acompañar.</h2><p>Tu cuenta determina de manera segura qué puedes hacer en la comunidad.</p></div><div class="animal" role="img" aria-label="Perrito cariñoso">🐶</div></div>
+  <div class="auth-content"><span class="overline">Acceso seguro de la comunidad</span><h1>¡Hola otra vez! 👋</h1><p class="subtitle">Entra con tu usuario y contraseña. Los permisos se asignan por el administrador; no necesitas elegir tu tipo de cuenta.</p>
+  {% if form.non_field_errors or form.errors %}<div class="notice error" role="alert">No fue posible iniciar sesión. Revisa tus datos y que tu cuenta esté activa.</div>{% endif %}
+  <form method="post" action="{% url 'login' %}">{% csrf_token %}
+    <p><label for="id_username">Usuario</label>{{ form.username }}</p>
+    <p><label for="id_password">Contraseña</label>{{ form.password }}</p>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="button">Entrar a Stray Animals →</button>
+  </form>
+  <p class="muted tiny" style="margin-top:22px">¿Aún no tienes cuenta? <a href="{% url 'registro' %}">Crea una cuenta de usuario</a></p>
+  </div>
+</div></div>
+{% endblock %}

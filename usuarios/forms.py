@@ -18,6 +18,14 @@ class PerfilUsuarioForm(forms.ModelForm):
 
 
 class CrearUsuarioForm(UserCreationForm):
+    username = forms.CharField(
+        label="Nombre de usuario",
+        max_length=30,
+        help_text="Máximo 30 caracteres.",
+        widget=forms.TextInput(
+            attrs={"maxlength": "30", "placeholder": "Escribe tu usuario"}
+        ),
+    )
     email = forms.EmailField(required=True)
     groups = forms.ModelMultipleChoiceField(
         queryset=Group.objects.all(), required=False, widget=forms.CheckboxSelectMultiple
@@ -27,6 +35,17 @@ class CrearUsuarioForm(UserCreationForm):
         required=False,
         widget=forms.CheckboxSelectMultiple,
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].max_length = 30
+        self.fields["username"].widget.attrs.update(
+            {"maxlength": "30", "placeholder": "Escribe tu usuario"}
+        )
+        self.fields["username"].help_text = (
+            "Obligatorio. Máximo 30 caracteres. "
+            "Se permiten letras, números y @/./+/-/_"
+        )
 
     class Meta(UserCreationForm.Meta):
         model = User

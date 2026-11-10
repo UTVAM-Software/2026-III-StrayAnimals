@@ -1,7 +1,2 @@
-{% extends "base.html" %}
-{% block title %}Acceso denegado | Stray Animals{% endblock %}
-{% block content %}
-<h1>403 — Acceso denegado</h1>
-<p>Tu cuenta está autenticada, pero no posee el permiso necesario para realizar esta operación.</p>
-<a class="btn secondary" href="{% url 'inicio' %}">Volver al inicio</a>
-{% endblock %}
+{% extends 'base.html' %}{% block title %}Acceso restringido | Stray Animals{% endblock %}
+{% block content %}<div class="shell page-head"><span class="eyebrow">🛡️ Tu seguridad importa</span><h1>403 · Sin permiso para entrar</h1><p>Esta sección necesita una autorización especial. Puedes volver a tu espacio o pedir ayuda al administrador.</p><a class="button" href="{% url 'inicio' %}">Volver al inicio</a></div>{% endblock %}

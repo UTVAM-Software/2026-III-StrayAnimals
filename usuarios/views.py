@@ -8,6 +8,7 @@ from .forms import (
     PerfilUsuarioForm, RolForm,
 )
 from .models import PerfilUsuario, Rol
+from .security import solo_superusuario, denegar_escritura_lector
 
 
 @login_required
@@ -24,6 +25,7 @@ def rol_lista(request):
 
 @login_required
 @permission_required("usuarios.add_rol", raise_exception=True)
+@denegar_escritura_lector
 def rol_crear(request):
     form = RolForm(request.POST or None)
     if form.is_valid():
@@ -34,6 +36,7 @@ def rol_crear(request):
 
 @login_required
 @permission_required("usuarios.change_rol", raise_exception=True)
+@denegar_escritura_lector
 def rol_editar(request, pk):
     objeto = get_object_or_404(Rol, pk=pk)
     form = RolForm(request.POST or None, instance=objeto)
@@ -45,6 +48,7 @@ def rol_editar(request, pk):
 
 @login_required
 @permission_required("usuarios.delete_rol", raise_exception=True)
+@denegar_escritura_lector
 def rol_eliminar(request, pk):
     objeto = get_object_or_404(Rol, pk=pk)
     if request.method == "POST":
@@ -63,6 +67,7 @@ def perfil_lista(request):
 
 @login_required
 @permission_required("usuarios.add_perfilusuario", raise_exception=True)
+@denegar_escritura_lector
 def perfil_crear(request):
     form = PerfilUsuarioForm(request.POST or None)
     if form.is_valid():
@@ -73,6 +78,7 @@ def perfil_crear(request):
 
 @login_required
 @permission_required("usuarios.change_perfilusuario", raise_exception=True)
+@denegar_escritura_lector
 def perfil_editar(request, pk):
     objeto = get_object_or_404(PerfilUsuario, pk=pk)
     form = PerfilUsuarioForm(request.POST or None, instance=objeto)
@@ -84,6 +90,7 @@ def perfil_editar(request, pk):
 
 @login_required
 @permission_required("usuarios.delete_perfilusuario", raise_exception=True)
+@denegar_escritura_lector
 def perfil_eliminar(request, pk):
     objeto = get_object_or_404(PerfilUsuario, pk=pk)
     if request.method == "POST":
@@ -95,12 +102,15 @@ def perfil_eliminar(request, pk):
 # ----- DJANGO AUTH: USER -----
 @login_required
 @permission_required("auth.view_user", raise_exception=True)
+@solo_superusuario
 def usuario_lista(request):
     return render(request, "usuarios/usuario_lista.html", {"usuarios": User.objects.prefetch_related("groups").all()})
 
 
 @login_required
 @permission_required("auth.add_user", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def usuario_crear(request):
     form = CrearUsuarioForm(request.POST or None)
     if form.is_valid():
@@ -111,6 +121,8 @@ def usuario_crear(request):
 
 @login_required
 @permission_required("auth.change_user", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def usuario_editar(request, pk):
     objeto = get_object_or_404(User, pk=pk)
     form = EditarUsuarioForm(request.POST or None, instance=objeto)
@@ -122,6 +134,8 @@ def usuario_editar(request, pk):
 
 @login_required
 @permission_required("auth.delete_user", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def usuario_eliminar(request, pk):
     objeto = get_object_or_404(User, pk=pk)
     if objeto.pk == request.user.pk:
@@ -135,12 +149,15 @@ def usuario_eliminar(request, pk):
 # ----- DJANGO AUTH: GROUP -----
 @login_required
 @permission_required("auth.view_group", raise_exception=True)
+@solo_superusuario
 def grupo_lista(request):
     return render(request, "usuarios/grupo_lista.html", {"objetos": Group.objects.prefetch_related("permissions").all()})
 
 
 @login_required
 @permission_required("auth.add_group", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def grupo_crear(request):
     form = GroupForm(request.POST or None)
     if form.is_valid():
@@ -151,6 +168,8 @@ def grupo_crear(request):
 
 @login_required
 @permission_required("auth.change_group", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def grupo_editar(request, pk):
     objeto = get_object_or_404(Group, pk=pk)
     form = GroupForm(request.POST or None, instance=objeto)
@@ -162,6 +181,8 @@ def grupo_editar(request, pk):
 
 @login_required
 @permission_required("auth.delete_group", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def grupo_eliminar(request, pk):
     objeto = get_object_or_404(Group, pk=pk)
     if request.method == "POST":
@@ -173,6 +194,7 @@ def grupo_eliminar(request, pk):
 # ----- DJANGO AUTH: PERMISSION -----
 @login_required
 @permission_required("auth.view_permission", raise_exception=True)
+@solo_superusuario
 def permiso_lista(request):
     objetos = Permission.objects.select_related("content_type").all()
     return render(request, "usuarios/permiso_lista.html", {"objetos": objetos})
@@ -180,6 +202,8 @@ def permiso_lista(request):
 
 @login_required
 @permission_required("auth.add_permission", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def permiso_crear(request):
     form = PermissionForm(request.POST or None)
     if form.is_valid():
@@ -190,6 +214,8 @@ def permiso_crear(request):
 
 @login_required
 @permission_required("auth.change_permission", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def permiso_editar(request, pk):
     objeto = get_object_or_404(Permission, pk=pk)
     form = PermissionForm(request.POST or None, instance=objeto)
@@ -201,6 +227,8 @@ def permiso_editar(request, pk):
 
 @login_required
 @permission_required("auth.delete_permission", raise_exception=True)
+@solo_superusuario
+@denegar_escritura_lector
 def permiso_eliminar(request, pk):
     objeto = get_object_or_404(Permission, pk=pk)
     if request.method == "POST":
