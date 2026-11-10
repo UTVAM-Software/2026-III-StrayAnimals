@@ -3,23 +3,20 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
-
-from usuarios.views import inicio
+from usuarios.public_views import acerca, mi_perfil, portada, registro
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(
-        "login/",
-        auth_views.LoginView.as_view(template_name="registration/login.html"),
-        name="login",
-    ),
+    path("login/", auth_views.LoginView.as_view(template_name="registration/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path("", inicio, name="inicio"),
+    path("registro/", registro, name="registro"),
+    path("mi-perfil/", mi_perfil, name="mi_perfil"),
+    path("acerca/", acerca, name="acerca"),
+    path("", portada, name="inicio"),
     path("usuarios/", include("usuarios.urls")),
     path("reportes/", include("reportes.urls")),
     path("hogares-temporales/", include("hogares_temporales.urls")),
     path("adopciones/", include("adopciones.urls")),
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

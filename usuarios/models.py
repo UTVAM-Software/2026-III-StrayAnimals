@@ -7,6 +7,7 @@ class Rol(models.Model):
         ADMINISTRADOR = "Administrador", "Administrador"
         VOLUNTARIO = "Voluntario", "Voluntario"
         CIUDADANO = "Ciudadano", "Ciudadano"
+        SOLO_LECTURA = "Solo lectura", "Solo lectura"
 
     nombre_rol = models.CharField(
         max_length=30,

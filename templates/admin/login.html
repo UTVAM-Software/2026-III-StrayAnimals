@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceso administrativo | Stray Animals</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #254936;
+      --teal: #3d7656;
+      --teal-deep: #2b563d;
+      --ink: #273b30;
+      --muted: #6f796f;
+      --line: #dfe8dc;
+      --surface: #ffffff;
+      --error: #a22138;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: radial-gradient(circle at 14% 16%, #e8efde 0, transparent 34%),
+                  radial-gradient(circle at 86% 85%, #fbe0cd 0, transparent 40%),
+                  #fcf9f1;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      width: min(950px, 100%);
+      min-height: 540px;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid #e5ecea;
+      border-radius: 26px;
+      box-shadow: 0 24px 72px rgba(19, 45, 56, .13);
+    }
+    .hero {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 44px;
+      color: white;
+      background: linear-gradient(150deg, #284d3e 0%, #426b4d 55%, #7c9667 100%);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      border: 70px solid rgba(255,255,255,.075);
+      right: -170px;
+      bottom: -170px;
+      pointer-events: none;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; font-size: 19px; font-weight: 750; letter-spacing: -.3px; }
+    .logo {
+      display: grid; place-items: center;
+      width: 48px; height: 48px;
+      border-radius: 15px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      font-size: 27px;
+    }
+    .hero h1 { font-size: clamp(31px, 3.4vw, 43px); line-height: 1.15; letter-spacing: -1.2px; margin: 0 0 16px; }
+    .hero p { font-size: 15px; line-height: 1.75; max-width: 350px; color: #e8f4e6; margin: 0; }
+    .caption { font-size: 12px; letter-spacing: .4px; color: #e8f4e6; }
+    .panel { display: flex; justify-content: center; flex-direction: column; padding: 52px 58px; }
+    .eyebrow { font-weight: 700; font-size: 12px; letter-spacing: 1.8px; color: var(--teal); text-transform: uppercase; }
+    .panel h2 { font-size: 30px; line-height: 1.2; margin: 12px 0 11px; letter-spacing: -.7px; }
+    .lead { color: var(--muted); margin: 0 0 32px; line-height: 1.65; font-size: 14px; }
+    .field { margin: 0 0 21px; }
+    label { display: block; font-size: 13px; font-weight: 650; margin-bottom: 9px; }
+    .input {
+      width: 100%; height: 49px; padding: 0 14px;
+      border: 1px solid var(--line); border-radius: 11px;
+      background: #f9fbfb; color: var(--ink);
+      font: inherit; font-size: 14px; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .input:focus { background: white; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20,125,115,.13); }
+    .password-wrap { position: relative; }
+    .password-wrap .input { padding-right: 90px; }
+    .toggle {
+      position: absolute; right: 9px; top: 8px; border: none;
+      background: transparent; padding: 8px; color: var(--teal-deep);
+      cursor: pointer; font: inherit; font-size: 12px; font-weight: 700;
+    }
+    .submit {
+      display: block; width: 100%; height: 50px; margin-top: 9px;
+      border: none; border-radius: 11px; background: var(--teal);
+      color: white; font: inherit; font-weight: 700; font-size: 15px;
+      cursor: pointer; transition: background .2s, transform .2s;
+    }
+    .submit:hover { background: var(--teal-deep); transform: translateY(-1px); }
+    .submit:focus-visible, .toggle:focus-visible, a:focus-visible { outline: 3px solid #73cdb8; outline-offset: 3px; }
+    .error {
+      padding: 12px 14px; border-radius: 10px; margin-bottom: 20px;
+      color: var(--error); background: #fff0f2; border: 1px solid #f7d4db;
+      font-size: 13px; line-height: 1.5;
+    }
+    .error ul { margin: 5px 0; padding-left: 20px; }
+    .back { text-align: center; margin: 22px 0 0; font-size: 13px; }
+    .back a { color: var(--teal-deep); font-weight: 650; text-decoration: none; }
+    .back a:hover { text-decoration: underline; }
+    .fine { color: #81939a; text-align: center; margin-top: 30px; font-size: 12px; }
+    @media (max-width: 720px) {
+      .shell { grid-template-columns: 1fr; max-width: 480px; }
+      .hero { min-height: 190px; gap: 20px; padding: 26px 30px; }
+      .hero h1 { font-size: 27px; }
+      .hero p, .caption { display: none; }
+      .panel { padding: 36px 30px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero" aria-label="Presentación de Stray Animals">
+      <div class="brand"><span class="logo" aria-hidden="true">🐾</span> Stray Animals</div>
+      <div>
+        <h1>Donde cada patita importa.</h1>
+        <p>Un espacio cálido y seguro para coordinar reportes, hogares temporales y nuevas oportunidades de adopción.</p>
+      </div>
+      <div class="caption">PANEL DE ADMINISTRACIÓN · ACCESO RESTRINGIDO</div>
+    </section>
+
+    <section class="panel" aria-labelledby="login-title">
+      <span class="eyebrow">Acceso seguro</span>
+      <h2 id="login-title">Qué alegría verte de nuevo</h2>
+      <p class="lead">Ingresa con tu cuenta de administrador para continuar.</p>
+
+      {% if form.non_field_errors %}
+        <div class="error" role="alert">{{ form.non_field_errors }}</div>
+      {% endif %}
+      {% if form.username.errors or form.password.errors %}
+        <div class="error" role="alert">
+          {{ form.username.errors }}
+          {{ form.password.errors }}
+        </div>
+      {% endif %}
+      {% if user.is_authenticated and not user.is_staff %}
+        <div class="error" role="alert">Tu cuenta no tiene acceso al panel administrativo.</div>
+      {% endif %}
+
+      <form method="post" action="{{ app_path }}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next|default:'/admin/' }}">
+
+        <div class="field">
+          <label for="id_username">Nombre de usuario</label>
+          <input class="input" type="text" name="username" id="id_username"
+                 value="{{ form.username.value|default_if_none:'' }}"
+                 autocomplete="username" maxlength="150" required autofocus
+                 placeholder="Tu usuario de administrador">
+        </div>
+        <div class="field">
+          <label for="id_password">Contraseña</label>
+          <div class="password-wrap">
+            <input class="input" type="password" name="password" id="id_password"
+                   autocomplete="current-password" required placeholder="Introduce tu contraseña">
+            <button class="toggle" type="button" id="toggle-password"
+                    aria-controls="id_password" aria-pressed="false">Mostrar</button>
+          </div>
+        </div>
+        <button class="submit" type="submit">Iniciar sesión</button>
+      </form>
+      <div class="back"><a href="/">← Volver al sitio</a></div>
+      <p class="fine">© Stray Animals · Administración segura con Django</p>
+    </section>
+  </main>
+  <script>
+    const toggle = document.getElementById('toggle-password');
+    const password = document.getElementById('id_password');
+    toggle.addEventListener('click', () => {
+      const show = password.type === 'password';
+      password.type = show ? 'text' : 'password';
+      toggle.textContent = show ? 'Ocultar' : 'Mostrar';
+      toggle.setAttribute('aria-pressed', String(show));
+    });
+  </script>
+</body>
+</html>

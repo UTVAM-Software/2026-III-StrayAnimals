@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block title %}Mi perfil | Stray Animals{% endblock %}
+{% block content %}
+<div class="shell page-head"><span class="eyebrow">🌷 Mi espacio</span><h1>Hola, {{ perfil.nombre }}</h1><p>Tu información personal dentro de la comunidad.</p></div>
+<div class="shell"><div class="content-card form-card"><div class="status-row"><span class="tag">{{ tipo_acceso }}</span><span class="tag">{{ perfil.rol.nombre_rol }}</span><span class="muted">@{{ user.username }}</span></div>
+{% if acceso_solo_lectura %}
+ <div class="notice" role="status">👀 Tu cuenta tiene acceso de <strong>Solo lectura</strong>. Puedes consultar información, pero no cambiar registros ni tu perfil.</div>
+ <p><strong>Nombre:</strong> {{ perfil.nombre }}</p><p><strong>Correo:</strong> {{ perfil.correo }}</p>
+ <div class="form-actions"><a class="button light" href="{% url 'inicio' %}">Volver al inicio</a></div>
+{% else %}
+ <h2 style="margin-top:16px">Editar mi perfil</h2><form method="post">{% csrf_token %}{{ form.as_p }}<div class="form-actions"><button class="button" type="submit">Guardar mis cambios</button><a class="button light" href="{% url 'inicio' %}">Volver al inicio</a></div></form>
+{% endif %}
+</div></div>
+{% endblock %}

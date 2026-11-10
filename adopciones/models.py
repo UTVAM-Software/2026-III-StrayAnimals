@@ -25,6 +25,7 @@ class SolicitudAdopcion(models.Model):
         default=EstadoSolicitud.PENDIENTE,
     )
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
+    motivo = models.TextField(blank=True, help_text="¿Por qué te gustaría adoptar?")
 
     class Meta:
         ordering = ["-fecha_solicitud"]

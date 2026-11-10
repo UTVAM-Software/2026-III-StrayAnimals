@@ -1,1 +1,8 @@
-{% extends "base.html" %}{% block content %}<h1>{{ titulo }}</h1><form method="post"{% if multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}{{ form.as_p }}<button type="submit">Guardar</button> <a class="btn secondary" href="{% url cancelar_url %}">Cancelar</a></form>{% endblock %}
+{% extends 'base.html' %}{% block title %}{{ titulo }} | Stray Animals{% endblock %}
+{% block content %}
+<div class="shell page-head"><span class="eyebrow">💚 Hagamos algo bueno</span><h1>{{ titulo }}</h1>{% if descripcion %}<p>{{ descripcion }}</p>{% endif %}</div>
+<div class="shell"><div class="content-card form-card"><form method="post"{% if multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+{% if form.non_field_errors %}<div class="notice error" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+{% for field in form %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}{% if field.errors %}<span class="notice error" style="display:block" role="alert">{{ field.errors }}</span>{% endif %}</p>{% endfor %}
+<div class="form-actions"><button type="submit" class="button">Guardar cambios 💚</button><a href="{% url cancelar_url %}" class="button light">Cancelar</a></div></form><p class="legal-note" style="margin-top:22px">Tu información se envía al servidor de Django. Evita compartir direcciones particulares o datos sensibles de otras personas.</p></div></div>
+{% endblock %}

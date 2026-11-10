@@ -11,6 +11,7 @@ class HogarTemporal(models.Model):
     )
     capacidad = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     disponibilidad = models.BooleanField(default=True)
+    zona = models.CharField(max_length=120, blank=True, help_text="Colonia o zona aproximada, sin dirección exacta")
 
     class Meta:
         ordering = ["-disponibilidad", "capacidad"]
